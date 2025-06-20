@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Telegram User Info</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 500px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        pre {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 400px;
+        }
+        .error {
+            color: red;
+            margin-top: 1rem;
+        }
+        footer {
+            margin-top: auto;
+            padding: 1rem;
+            font-size: 0.8rem;
+            color: #777;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Telegram User Info Lookup</h1>
+        <input type="text" id="username" placeholder="Enter Telegram username (without @)" />
+        <button onclick="fetchUserInfo()">Get Info</button>
+        <div id="result"></div>
+    </div>
+
+    <footer>
+        Powered by <a href="https://t.me/bbinl_cc_bot"> bbinl cc bot</a> &middot; <a href="https://github.com/bbinl/fuck.git" target="_blank" rel="noopener noreferrer">Source Code</a>
+    </footer>
+
+    <script>
+        async function fetchUserInfo() {
+            const usernameInput = document.getElementById('username');
+            const resultDiv = document.getElementById('result');
+            const username = usernameInput.value.trim();
+
+            if (!username) {
+                resultDiv.innerHTML = '<p class="error">Please enter a username.</p>';
+                return;
+            }
+
+            resultDiv.innerHTML = 'Loading...';
+
+            try {
+                const response = await fetch(`/get_user_info?username=${encodeURIComponent(username)}`);
+                const text = await response.text();
+
+                if (response.ok) {
+                    resultDiv.innerHTML = `<pre>${text}</pre>`;
+                } else {
+                    resultDiv.innerHTML = `<p class="error">Error: ${text}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="error">Network error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
